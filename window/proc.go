@@ -14,6 +14,7 @@ var (
 	ProcGetWindowThreadProcessId = user32.NewProc("GetWindowThreadProcessId")
 	ProcGetForegroundWindow      = user32.NewProc("GetForegroundWindow")
 	ProcSetForegroundWindow      = user32.NewProc("SetForegroundWindow")
+	ProcAttachThreadInput        = user32.NewProc("AttachThreadInput")
 	ProcEnumWindows              = user32.NewProc("EnumWindows")
 	ProcSendMessageW             = user32.NewProc("SendMessageW")
 	ProcSendMessageTimeoutW      = user32.NewProc("SendMessageTimeoutW")
@@ -70,4 +71,5 @@ var (
 	ProcProcess32First           = kernel32.NewProc("Process32FirstW")
 	ProcProcess32Next            = kernel32.NewProc("Process32NextW")
 	ProcCloseHandle              = kernel32.NewProc("CloseHandle")
+	ProcGetCurrentThreadId       = kernel32.NewProc("GetCurrentThreadId")
 )

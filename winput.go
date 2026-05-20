@@ -286,8 +286,11 @@ func hotkeyNeedsForeground(keys []Key) bool {
 func pressHotkeyForeground(hwnd uintptr, keys []Key) error {
 	prev := window.GetForegroundWindow()
 	if prev != hwnd {
-		if err := window.SetForegroundWindow(hwnd); err != nil {
+		if err := window.ForceSetForegroundWindow(hwnd); err != nil {
 			return fmt.Errorf("%w: failed to foreground target window for modifier hotkey: %v", ErrPermissionDenied, err)
+		}
+		if window.GetForegroundWindow() != hwnd {
+			return fmt.Errorf("%w: target window did not become foreground (ASFW restriction)", ErrPermissionDenied)
 		}
 		time.Sleep(50 * time.Millisecond)
 	}
@@ -308,7 +311,7 @@ func pressHotkeyForeground(hwnd uintptr, keys []Key) error {
 	}
 
 	if prev != 0 && prev != hwnd {
-		_ = window.SetForegroundWindow(prev)
+		_ = window.ForceSetForegroundWindow(prev)
 	}
 	return nil
 }
