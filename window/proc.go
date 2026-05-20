@@ -12,6 +12,8 @@ var (
 	ProcFindWindowW              = user32.NewProc("FindWindowW")
 	ProcFindWindowExW            = user32.NewProc("FindWindowExW")
 	ProcGetWindowThreadProcessId = user32.NewProc("GetWindowThreadProcessId")
+	ProcGetForegroundWindow      = user32.NewProc("GetForegroundWindow")
+	ProcSetForegroundWindow      = user32.NewProc("SetForegroundWindow")
 	ProcEnumWindows              = user32.NewProc("EnumWindows")
 	ProcSendMessageW             = user32.NewProc("SendMessageW")
 	ProcSendMessageTimeoutW      = user32.NewProc("SendMessageTimeoutW")

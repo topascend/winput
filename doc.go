@@ -10,7 +10,8 @@
 //
 // 2. Dual Input Backends:
 //   - BackendMessage (Default): Uses PostMessage for background input. It does not require focus
-//     and is ideal for non-intrusive automation.
+//     for ordinary input and is ideal for non-intrusive automation, but window hotkeys with
+//     modifiers may temporarily switch to foreground keyboard events for reliability.
 //   - BackendHID: Uses the Interception driver for kernel-level simulation (requires driver installation).
 //     This mode simulates hardware-level input, complete with human-like mouse movement trajectories
 //     and jitter. Supports custom DLL path via SetHIDLibraryPath.

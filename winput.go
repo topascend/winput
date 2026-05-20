@@ -265,6 +265,54 @@ func keyUpImpl(cb Backend, hwnd uintptr, k Key) error {
 	return keyboard.KeyUp(hwnd, k)
 }
 
+func isModifierKey(k Key) bool {
+	switch k {
+	case KeyCtrl, KeyAlt, KeyShift:
+		return true
+	default:
+		return false
+	}
+}
+
+func hotkeyNeedsForeground(keys []Key) bool {
+	for _, k := range keys {
+		if isModifierKey(k) {
+			return true
+		}
+	}
+	return false
+}
+
+func pressHotkeyForeground(hwnd uintptr, keys []Key) error {
+	prev := window.GetForegroundWindow()
+	if prev != hwnd {
+		if err := window.SetForegroundWindow(hwnd); err != nil {
+			return fmt.Errorf("%w: failed to foreground target window for modifier hotkey: %v", ErrPermissionDenied, err)
+		}
+		time.Sleep(50 * time.Millisecond)
+	}
+
+	for _, k := range keys {
+		vk := keyboard.MapScanCodeToVK(k)
+		if vk == 0 {
+			return ErrUnsupportedKey
+		}
+		window.ProcKeybdEvent.Call(vk, 0, 0, 0)
+		time.Sleep(10 * time.Millisecond)
+	}
+	time.Sleep(50 * time.Millisecond)
+	for i := len(keys) - 1; i >= 0; i-- {
+		vk := keyboard.MapScanCodeToVK(keys[i])
+		window.ProcKeybdEvent.Call(vk, 0, 0x0002, 0)
+		time.Sleep(10 * time.Millisecond)
+	}
+
+	if prev != 0 && prev != hwnd {
+		_ = window.SetForegroundWindow(prev)
+	}
+	return nil
+}
+
 // -----------------------------------------------------------------------------
 // Input API (Mouse)
 // -----------------------------------------------------------------------------
@@ -672,6 +720,9 @@ func (w *Window) Press(key Key) error {
 }
 
 // PressHotkey presses a combination of keys (e.g., Ctrl+A).
+// Under BackendMessage, modifier combinations (Ctrl/Alt/Shift + another key)
+// are promoted to foreground keyboard events because PostMessage alone does
+// not provide reliable modifier state to many target windows.
 func (w *Window) PressHotkey(keys ...Key) error {
 	inputMutex.Lock()
 	defer inputMutex.Unlock()
@@ -683,6 +734,9 @@ func (w *Window) PressHotkey(keys ...Key) error {
 	}
 
 	cb := getBackend()
+	if cb == BackendMessage && w.HWND != 0 && hotkeyNeedsForeground(keys) {
+		return pressHotkeyForeground(w.HWND, keys)
+	}
 	for _, k := range keys {
 		if err := keyDownImpl(cb, w.HWND, k); err != nil {
 			return err

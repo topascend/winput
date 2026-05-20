@@ -377,6 +377,10 @@ Press simulates a full keystroke (KeyDown followed by KeyUp).
 func (w *Window) PressHotkey(keys ...Key) error
 ```
 PressHotkey presses a combination of keys in order and releases them in reverse order.
+When used on a window with `BackendMessage`, combinations that include modifier keys
+such as `Ctrl`, `Alt`, or `Shift` are sent via foreground keyboard events instead of
+pure `PostMessage`, because many applications do not recognize modifier state reliably
+through window messages alone.
 
 #### func (*Window) Type
 

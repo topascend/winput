@@ -76,6 +76,8 @@ func main() {
 *   **Pros**: No focus required, no mouse movement, works in background.
 *   **Cons**: 
     *   **Modifier Keys**: `PostMessage` does **not** update global keyboard state. Apps checking `GetKeyState` (e.g. for Ctrl+C) might fail.
+        `Window.PressHotkey` works around this for modifier combinations by temporarily
+        using foreground keyboard events, so those calls are not purely background operations.
     *   **UIPI**: Cannot send messages to apps running as Administrator if your app is not.
     *   **Coordinates**: Limited to 16-bit signed integer range ([-32768, 32767]). Larger coordinates will be clipped.
     *   **Compatibility**: Some games (DirectX/OpenGL/RawInput) and frameworks (Qt/WPF) ignore these messages.

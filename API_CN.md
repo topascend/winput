@@ -360,6 +360,9 @@ Press 模拟一次完整的按键过程。
 func (w *Window) PressHotkey(keys ...Key) error
 ```
 PressHotkey 执行组合键（如 Ctrl+A）。
+当它作用于窗口且使用 `BackendMessage` 时，包含 `Ctrl`、`Alt`、`Shift`
+等修饰键的组合会回退为前台键盘事件发送，而不是纯 `PostMessage`。
+原因是很多应用仅靠窗口消息无法可靠识别修饰键状态。
 
 #### func (*Window) Type
 
