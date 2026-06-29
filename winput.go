@@ -770,7 +770,7 @@ func (w *Window) Type(text string, t ...time.Duration) error {
 	cb := getBackend()
 	if cb == BackendMessage {
 		// Use WM_CHAR for reliability in background
-		return keyboard.Type(w.HWND, text, t)
+		return keyboard.Type(w.HWND, text, t...)
 	}
 
 	// HID Backend simulation
