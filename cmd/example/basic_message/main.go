@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/rpdg/winput"
+	"github.com/topascend/winput"
 )
 
 func main() {

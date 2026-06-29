@@ -6,7 +6,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/rpdg/winput/window"
+	"github.com/topascend/winput/window"
 )
 
 const (

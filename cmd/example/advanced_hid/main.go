@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/rpdg/winput"
+	"github.com/topascend/winput"
 )
 
 func main() {

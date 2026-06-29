@@ -84,7 +84,7 @@ var (
 )
 ```
 
-## Screen Package (`github.com/rpdg/winput/screen`)
+## Screen Package (`github.com/topascend/winput/screen`)
 
 ### func ImageToVirtual
 

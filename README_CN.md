@@ -35,8 +35,8 @@
 
 ```go
 import (
-	"github.com/rpdg/winput"
-	"github.com/rpdg/winput/screen"
+	"github.com/topascend/winput"
+	"github.com/topascend/winput/screen"
 )
 
 func main() {
@@ -98,7 +98,7 @@ func main() {
 ## 安装
 
 ```bash
-go get github.com/rpdg/winput
+go get github.com/topascend/winput
 ```
 
 ### HID 支持 (可选)
@@ -147,7 +147,7 @@ package main
 
 import (
 	"log"
-	"github.com/rpdg/winput"
+	"github.com/topascend/winput"
 )
 
 func main() {
@@ -183,7 +183,7 @@ func main() {
 	winput.Press(winput.KeyEnter)
 
 	// 6. 使用 winput/screen (查询屏幕边界)
-	// import "github.com/rpdg/winput/screen"
+	// import "github.com/topascend/winput/screen"
 	bounds := screen.VirtualBounds()
 	fmt.Printf("桌面边界: %d, %d\n", bounds.Right, bounds.Bottom)
 }
@@ -270,7 +270,7 @@ w.Type("password") // 使用当前激活的后端工作
 
 *   **对比 C# Interceptor**: 大多数 C# 封装直接暴露原始驱动 API，而 `winput` 将其抽象为高级动作 (Click, Type) 并内置了坐标转换逻辑。
 
-	
+
 
 ## 选型指南:  winput vs robotgo
 

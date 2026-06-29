@@ -3,7 +3,7 @@
 
 ---
 <p align="center">
- <a href="README_CN.md">🇨🇳 中文</a> 
+ <a href="README_CN.md">🇨🇳 中文</a>
 </p>
 ---
 
@@ -19,7 +19,7 @@ It provides a unified, window-centric API that abstracts the underlying input me
 *   **Pure Go (No CGO)**: Uses dynamic DLL loading. No GCC required for compilation.
 *   **Window-Centric API**: Operations are performed on `Window` objects, not raw HWNDs.
 *   **Read Text from Controls**: Use `Text()` for standard Win32 controls and `Value()` for best-effort reads with UI Automation fallback on modern controls.
-*   **Background Input**: 
+*   **Background Input**:
     *   **Message Backend**: Sends inputs directly to window message queues. Works without window focus or mouse cursor movement.
     *   **HID Backend**: Uses the [Interception](https://github.com/oblitum/Interception) driver to simulate hardware input at the kernel level.
 *   **Coordinate Management**:
@@ -39,8 +39,8 @@ Ideal for applications where window handles are unreliable.
 
 ```go
 import (
-	"github.com/rpdg/winput"
-	"github.com/rpdg/winput/screen"
+	"github.com/topascend/winput"
+	"github.com/topascend/winput/screen"
 )
 
 func main() {
@@ -74,7 +74,7 @@ func main() {
 ### Message Backend
 *   **Mechanism**: Uses `PostMessageW`.
 *   **Pros**: No focus required, no mouse movement, works in background.
-*   **Cons**: 
+*   **Cons**:
     *   **Modifier Keys**: `PostMessage` does **not** update global keyboard state. Apps checking `GetKeyState` (e.g. for Ctrl+C) might fail.
         `Window.PressHotkey` works around this for modifier combinations by temporarily
         using foreground keyboard events, so those calls are not purely background operations.
@@ -95,7 +95,7 @@ func main() {
 ## Installation
 
 ```bash
-go get github.com/rpdg/winput
+go get github.com/topascend/winput
 ```
 
 ### HID Support (Optional)
@@ -140,7 +140,7 @@ package main
 
 import (
 	"log"
-	"github.com/rpdg/winput"
+	"github.com/topascend/winput"
 )
 
 func main() {
@@ -176,7 +176,7 @@ func main() {
 	winput.Press(winput.KeyEnter)
 
 	// 6. Using winput/screen (Boundary query)
-	// import "github.com/rpdg/winput/screen"
+	// import "github.com/topascend/winput/screen"
 	bounds := screen.VirtualBounds()
 	fmt.Printf("Virtual Desktop Bounds: %d, %d\n", bounds.Right, bounds.Bottom)
 }

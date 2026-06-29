@@ -7,7 +7,7 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/rpdg/winput/window"
+	"github.com/topascend/winput/window"
 )
 
 // GDI Constants

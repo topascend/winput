@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rpdg/winput/hid/interception"
-	"github.com/rpdg/winput/window"
+	"github.com/topascend/winput/hid/interception"
+	"github.com/topascend/winput/window"
 )
 
 var ErrDriverNotInstalled = errors.New("interception driver not installed or accessible")

@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rpdg/winput"
-	"github.com/rpdg/winput/screen"
+	"github.com/topascend/winput"
+	"github.com/topascend/winput/screen"
 )
 
 // Define command line flags

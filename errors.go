@@ -3,7 +3,7 @@ package winput
 import (
 	"errors"
 
-	"github.com/rpdg/winput/window"
+	"github.com/topascend/winput/window"
 )
 
 var (

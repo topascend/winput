@@ -7,11 +7,11 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/rpdg/winput/hid"
-	"github.com/rpdg/winput/keyboard"
-	"github.com/rpdg/winput/mouse"
-	"github.com/rpdg/winput/uia"
-	"github.com/rpdg/winput/window"
+	"github.com/topascend/winput/hid"
+	"github.com/topascend/winput/keyboard"
+	"github.com/topascend/winput/mouse"
+	"github.com/topascend/winput/uia"
+	"github.com/topascend/winput/window"
 )
 
 // Window represents a handle to a window.
