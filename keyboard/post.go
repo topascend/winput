@@ -73,17 +73,20 @@ func KeyUp(hwnd uintptr, key Key) error {
 }
 
 // Press simulates a key press (down then up) for the specified window using PostMessage.
-func Press(hwnd uintptr, key Key) error {
+func Press(hwnd uintptr, key Key, t ...time.Duration) error {
 	if err := KeyDown(hwnd, key); err != nil {
 		return err
 	}
-	time.Sleep(30 * time.Millisecond)
+	//time.Sleep(30 * time.Millisecond)
+	if len(t) > 0 && t[0] > 0 {
+		time.Sleep(t[0])
+	}
 	return KeyUp(hwnd, key)
 }
 
 // Type sends text to the specified window using WM_CHAR messages.
 // This is reliable for background input but does not support non-character keys.
-func Type(hwnd uintptr, text string) error {
+func Type(hwnd uintptr, text string, t ...time.Duration) error {
 	for _, r := range text {
 		if r > 0xFFFF {
 			r -= 0x10000
@@ -100,7 +103,11 @@ func Type(hwnd uintptr, text string) error {
 				return err
 			}
 		}
-		time.Sleep(30 * time.Millisecond)
+
+		//time.Sleep(30 * time.Millisecond)
+		if len(t) > 0 && t[0] > 0 {
+			time.Sleep(t[0])
+		}
 	}
 	return nil
 }

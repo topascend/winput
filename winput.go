@@ -757,7 +757,7 @@ func (w *Window) PressHotkey(keys ...Key) error {
 }
 
 // Type simulates typing text.
-func (w *Window) Type(text string) error {
+func (w *Window) Type(text string, t ...time.Duration) error {
 	inputMutex.Lock()
 	defer inputMutex.Unlock()
 	if err := w.checkReady(); err != nil {
@@ -770,7 +770,7 @@ func (w *Window) Type(text string) error {
 	cb := getBackend()
 	if cb == BackendMessage {
 		// Use WM_CHAR for reliability in background
-		return keyboard.Type(w.HWND, text)
+		return keyboard.Type(w.HWND, text, t)
 	}
 
 	// HID Backend simulation
