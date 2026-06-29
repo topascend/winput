@@ -78,9 +78,11 @@ func Press(hwnd uintptr, key Key, t ...time.Duration) error {
 		return err
 	}
 	//time.Sleep(30 * time.Millisecond)
+	d := 30 * time.Millisecond
 	if len(t) > 0 && t[0] > 0 {
-		time.Sleep(t[0])
+		d = t[0]
 	}
+	time.Sleep(d)
 	return KeyUp(hwnd, key)
 }
 
@@ -105,9 +107,11 @@ func Type(hwnd uintptr, text string, t ...time.Duration) error {
 		}
 
 		//time.Sleep(30 * time.Millisecond)
+		d := 30 * time.Millisecond
 		if len(t) > 0 && t[0] > 0 {
-			time.Sleep(t[0])
+			d = t[0]
 		}
+		time.Sleep(d)
 	}
 	return nil
 }

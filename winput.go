@@ -471,7 +471,7 @@ func MoveMouseTo(x, y int32) error {
 }
 
 // ClickMouseAt moves to the specified screen coordinates and performs a left click.
-func ClickMouseAt(x, y int32) error {
+func ClickMouseAt(x, y int32, t ...time.Duration) error {
 	inputMutex.Lock()
 	defer inputMutex.Unlock()
 	if err := checkBackend(); err != nil {
@@ -488,14 +488,19 @@ func ClickMouseAt(x, y int32) error {
 		return fmt.Errorf("SetCursorPos failed")
 	}
 
-	time.Sleep(30 * time.Millisecond)
+	//time.Sleep(30 * time.Millisecond)
+	d := 30 * time.Millisecond
+	if len(t) > 0 && t[0] > 0 {
+		d = t[0]
+	}
+	time.Sleep(d)
 	window.ProcMouseEvent.Call(0x0002, 0, 0, 0, 0)
 	window.ProcMouseEvent.Call(0x0004, 0, 0, 0, 0)
 	return nil
 }
 
 // DoubleClickMouseAt moves to the specified screen coordinates and performs a left double-click.
-func DoubleClickMouseAt(x, y int32) error {
+func DoubleClickMouseAt(x, y int32, t ...time.Duration) error {
 	inputMutex.Lock()
 	defer inputMutex.Unlock()
 	if err := checkBackend(); err != nil {
@@ -520,7 +525,12 @@ func DoubleClickMouseAt(x, y int32) error {
 	)
 
 	// First Click
-	time.Sleep(30 * time.Millisecond)
+	//time.Sleep(30 * time.Millisecond)
+	d := 30 * time.Millisecond
+	if len(t) > 0 && t[0] > 0 {
+		d = t[0]
+	}
+	time.Sleep(d)
 	window.ProcMouseEvent.Call(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
 	window.ProcMouseEvent.Call(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
 
@@ -535,7 +545,7 @@ func DoubleClickMouseAt(x, y int32) error {
 }
 
 // ClickRightMouseAt moves to the specified screen coordinates and performs a right click.
-func ClickRightMouseAt(x, y int32) error {
+func ClickRightMouseAt(x, y int32, t ...time.Duration) error {
 	inputMutex.Lock()
 	defer inputMutex.Unlock()
 	if err := checkBackend(); err != nil {
@@ -551,14 +561,19 @@ func ClickRightMouseAt(x, y int32) error {
 		return fmt.Errorf("SetCursorPos failed")
 	}
 
-	time.Sleep(30 * time.Millisecond)
+	//time.Sleep(30 * time.Millisecond)
+	d := 30 * time.Millisecond
+	if len(t) > 0 && t[0] > 0 {
+		d = t[0]
+	}
+	time.Sleep(d)
 	window.ProcMouseEvent.Call(0x0008, 0, 0, 0, 0) // RIGHTDOWN
 	window.ProcMouseEvent.Call(0x0010, 0, 0, 0, 0) // RIGHTUP
 	return nil
 }
 
 // ClickMiddleMouseAt moves to the specified screen coordinates and performs a middle click.
-func ClickMiddleMouseAt(x, y int32) error {
+func ClickMiddleMouseAt(x, y int32, t ...time.Duration) error {
 	inputMutex.Lock()
 	defer inputMutex.Unlock()
 	if err := checkBackend(); err != nil {
@@ -574,7 +589,12 @@ func ClickMiddleMouseAt(x, y int32) error {
 		return fmt.Errorf("SetCursorPos failed")
 	}
 
-	time.Sleep(30 * time.Millisecond)
+	//time.Sleep(30 * time.Millisecond)
+	d := 30 * time.Millisecond
+	if len(t) > 0 && t[0] > 0 {
+		d = t[0]
+	}
+	time.Sleep(d)
 	window.ProcMouseEvent.Call(0x0020, 0, 0, 0, 0) // MIDDLEDOWN
 	window.ProcMouseEvent.Call(0x0040, 0, 0, 0, 0) // MIDDLEUP
 	return nil
@@ -705,7 +725,7 @@ func (w *Window) KeyUp(key Key) error {
 }
 
 // Press simulates a key press (down then up).
-func (w *Window) Press(key Key) error {
+func (w *Window) Press(key Key, t ...time.Duration) error {
 	inputMutex.Lock()
 	defer inputMutex.Unlock()
 	if err := w.checkReady(); err != nil {
@@ -718,7 +738,12 @@ func (w *Window) Press(key Key) error {
 	if err := keyDownImpl(getBackend(), w.HWND, key); err != nil {
 		return err
 	}
-	time.Sleep(30 * time.Millisecond)
+	//time.Sleep(30 * time.Millisecond)
+	d := 30 * time.Millisecond
+	if len(t) > 0 && t[0] > 0 {
+		d = t[0]
+	}
+	time.Sleep(d)
 	return keyUpImpl(getBackend(), w.HWND, key)
 }
 
@@ -774,6 +799,10 @@ func (w *Window) Type(text string, t ...time.Duration) error {
 	}
 
 	// HID Backend simulation
+	d := 30 * time.Millisecond
+	if len(t) > 0 && t[0] > 0 {
+		d = t[0]
+	}
 	for _, r := range text {
 		k, shifted, ok := keyboard.LookupKey(r)
 		if !ok {
@@ -788,7 +817,8 @@ func (w *Window) Type(text string, t ...time.Duration) error {
 		} else {
 			hid.Press(uint16(k))
 		}
-		time.Sleep(30 * time.Millisecond)
+		//time.Sleep(30 * time.Millisecond)
+		time.Sleep(d)
 	}
 	return nil
 }
@@ -816,7 +846,7 @@ func KeyUp(k Key) error {
 }
 
 // Press simulates a global key press (down then up).
-func Press(k Key) error {
+func Press(k Key, t ...time.Duration) error {
 	inputMutex.Lock()
 	defer inputMutex.Unlock()
 	if err := checkBackend(); err != nil {
@@ -826,7 +856,12 @@ func Press(k Key) error {
 	if err := keyDownImpl(getBackend(), 0, k); err != nil {
 		return err
 	}
-	time.Sleep(30 * time.Millisecond)
+	//time.Sleep(30 * time.Millisecond)
+	d := 30 * time.Millisecond
+	if len(t) > 0 && t[0] > 0 {
+		d = t[0]
+	}
+	time.Sleep(d)
 	return keyUpImpl(getBackend(), 0, k)
 }
 
@@ -861,13 +896,17 @@ var (
 )
 
 // Type simulates typing text globally.
-func Type(text string) error {
+func Type(text string, t ...time.Duration) error {
 	inputMutex.Lock()
 	defer inputMutex.Unlock()
 	if err := checkBackend(); err != nil {
 		return err
 	}
 
+	d := 30 * time.Millisecond
+	if len(t) > 0 && t[0] > 0 {
+		d = t[0]
+	}
 	cb := getBackend()
 	if cb == BackendHID {
 		for _, r := range text {
@@ -883,7 +922,8 @@ func Type(text string) error {
 			} else {
 				hid.Press(uint16(k))
 			}
-			time.Sleep(30 * time.Millisecond)
+			//time.Sleep(30 * time.Millisecond)
+			time.Sleep(d)
 		}
 		return nil
 	}
@@ -907,7 +947,8 @@ func Type(text string) error {
 
 	for _, r := range text {
 		sendUnicode(r)
-		time.Sleep(30 * time.Millisecond)
+		//time.Sleep(30 * time.Millisecond)
+		time.Sleep(d)
 	}
 	return nil
 }
