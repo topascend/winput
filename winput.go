@@ -495,7 +495,7 @@ func ClickMouseAt(x, y int32, t ...time.Duration) error {
 
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -532,7 +532,7 @@ func DoubleClickMouseAt(x, y int32, t ...time.Duration) error {
 	// First Click
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -568,7 +568,7 @@ func ClickRightMouseAt(x, y int32, t ...time.Duration) error {
 
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -596,7 +596,7 @@ func ClickMiddleMouseAt(x, y int32, t ...time.Duration) error {
 
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -745,7 +745,7 @@ func (w *Window) Press(key Key, t ...time.Duration) error {
 	}
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -805,7 +805,7 @@ func (w *Window) Type(text string, t ...time.Duration) error {
 
 	// HID Backend simulation
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	for _, r := range text {
@@ -863,7 +863,7 @@ func Press(k Key, t ...time.Duration) error {
 	}
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -909,7 +909,7 @@ func Type(text string, t ...time.Duration) error {
 	}
 
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	cb := getBackend()
