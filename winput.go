@@ -3,6 +3,7 @@ package winput
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"sync"
 	"time"
 	"unsafe"
@@ -1020,4 +1021,10 @@ func (w *Window) ScreenToClient(x, y int32) (cx, cy int32, err error) {
 // ClientToScreen converts client coordinates to screen coordinates.
 func (w *Window) ClientToScreen(x, y int32) (sx, sy int32, err error) {
 	return window.ClientToScreen(w.HWND, x, y)
+}
+
+// parseHwnd 将 "0x..." 格式的十六进制字符串解析为 uintptr
+func parseHwnd(s string) uintptr {
+	v, _ := strconv.ParseUint(s, 0, 64)
+	return uintptr(v)
 }
