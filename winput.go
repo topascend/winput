@@ -19,6 +19,10 @@ type Window struct {
 	HWND uintptr
 }
 
+func NewWindow(hwnd uintptr) *Window {
+	return &Window{HWND: hwnd}
+}
+
 // -----------------------------------------------------------------------------
 // Window Discovery
 // -----------------------------------------------------------------------------
