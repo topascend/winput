@@ -132,11 +132,14 @@ func (w *Window) IsVisible() bool {
 	return window.IsVisible(w.HWND) && !window.IsIconic(w.HWND)
 }
 
-func (w *Window) checkReady() error {
-	if !w.IsValid() {
+func (w *Window) checkReady(cat ...int) error {
+	if len(cat) > 0 && cat[0] == 0 {
+		return nil
+	}
+	if (len(cat) > 0 && cat[0] == 1) && !w.IsValid() {
 		return ErrWindowGone
 	}
-	if !w.IsVisible() {
+	if (len(cat) > 0 && cat[0] == 2) && !w.IsVisible() {
 		return ErrWindowNotVisible
 	}
 	return nil
