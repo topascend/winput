@@ -1059,10 +1059,14 @@ func (w *Window) ClientCapture(path ...string) (img *image.RGBA, err error) {
 
 	// 是否生成文件
 	if len(path) > 0 {
+		var file *os.File
 		img, err = w.ClientCapture()
-		file, _ := os.Create(path[0])
-		png.Encode(file, img)
-		file.Close()
+		file, err = os.Create(path[0])
+		err = png.Encode(file, img)
+		if err != nil {
+			return
+		}
+		_ = file.Close()
 	}
 	return
 }
