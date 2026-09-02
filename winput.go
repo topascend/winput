@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"image"
+	"image/png"
+	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -1028,12 +1030,6 @@ func (w *Window) ClientToScreen(x, y int32) (sx, sy int32, err error) {
 	return window.ClientToScreen(w.HWND, x, y)
 }
 
-// parseHwnd 将 "0x..." 格式的十六进制字符串解析为 uintptr
-func parseHwnd(s string) uintptr {
-	v, _ := strconv.ParseUint(s, 0, 64)
-	return uintptr(v)
-}
-
 // ClientInfo 获取窗口坐标和宽高
 func (w *Window) ClientInfo() (x, y, width, height int32, err error) {
 	// 获取窗口左上角的屏幕坐标
@@ -1052,13 +1048,27 @@ func (w *Window) ClientInfo() (x, y, width, height int32, err error) {
 }
 
 // ClientCapture 截取窗口的图片
-func (w *Window) ClientCapture() (img *image.RGBA, err error) {
+func (w *Window) ClientCapture(path ...string) (img *image.RGBA, err error) {
 	x, y, width, height, err := w.ClientInfo()
 
-	// 4. 截取该窗口区域
+	// 截取该窗口区域
 	img, err = screen.CaptureRegion(x, y, width, height)
 	if err != nil {
 		return
 	}
+
+	// 是否生成文件
+	if len(path) > 0 {
+		img, err = w.ClientCapture()
+		file, _ := os.Create(path[0])
+		png.Encode(file, img)
+		file.Close()
+	}
 	return
+}
+
+// parseHwnd 将 "0x..." 格式的十六进制字符串解析为 uintptr
+func parseHwnd(s string) uintptr {
+	v, _ := strconv.ParseUint(s, 0, 64)
+	return uintptr(v)
 }
