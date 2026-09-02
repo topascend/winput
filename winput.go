@@ -1071,8 +1071,8 @@ func (w *Window) ClientCapture(path ...string) (img *image.RGBA, err error) {
 	return
 }
 
-// parseHwnd 将 "0x..." 格式的十六进制字符串解析为 uintptr
-func parseHwnd(s string) uintptr {
+// ParseHwnd 将 "0x..." 格式的十六进制字符串解析为 uintptr
+func ParseHwnd(s string) uintptr {
 	v, _ := strconv.ParseUint(s, 0, 64)
 	return uintptr(v)
 }
