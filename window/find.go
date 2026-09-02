@@ -5,6 +5,8 @@ import (
 	"strings"
 	"syscall"
 	"unsafe"
+
+	"github.com/tailscale/win"
 )
 
 func utf16Ptr(s string) *uint16 {
@@ -79,6 +81,13 @@ func FindByPID(targetPid uint32) ([]uintptr, error) {
 	}
 
 	return hwnds, nil
+}
+
+// GetPidByHwnd 获取进程的pid
+func GetPidByHwnd(hwnd uint32) (uint32, error) {
+	var pid uint32
+	win.GetWindowThreadProcessId(win.HWND(hwnd), &pid)
+	return pid, nil
 }
 
 // Process Enumeration helpers
