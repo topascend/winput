@@ -3,7 +3,7 @@ package winput
 import (
 	"errors"
 	"fmt"
-	"image"
+	"strconv"
 	"sync"
 	"time"
 	"unsafe"
@@ -11,7 +11,6 @@ import (
 	"github.com/topascend/winput/hid"
 	"github.com/topascend/winput/keyboard"
 	"github.com/topascend/winput/mouse"
-	"github.com/topascend/winput/screen"
 	"github.com/topascend/winput/uia"
 	"github.com/topascend/winput/window"
 )
@@ -19,6 +18,10 @@ import (
 // Window represents a handle to a window.
 type Window struct {
 	HWND uintptr
+}
+
+func NewWindow(hwnd uintptr) *Window {
+	return &Window{HWND: hwnd}
 }
 
 // -----------------------------------------------------------------------------
@@ -129,11 +132,14 @@ func (w *Window) IsVisible() bool {
 	return window.IsVisible(w.HWND) && !window.IsIconic(w.HWND)
 }
 
-func (w *Window) checkReady() error {
-	if !w.IsValid() {
+func (w *Window) checkReady(cat ...int) error {
+	if len(cat) > 0 && cat[0] == 0 {
+		return nil
+	}
+	if (len(cat) > 0 && cat[0] == 1) && !w.IsValid() {
 		return ErrWindowGone
 	}
-	if !w.IsVisible() {
+	if (len(cat) > 0 && cat[0] == 2) && !w.IsVisible() {
 		return ErrWindowNotVisible
 	}
 	return nil
@@ -492,7 +498,7 @@ func ClickMouseAt(x, y int32, t ...time.Duration) error {
 
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -529,7 +535,7 @@ func DoubleClickMouseAt(x, y int32, t ...time.Duration) error {
 	// First Click
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -565,7 +571,7 @@ func ClickRightMouseAt(x, y int32, t ...time.Duration) error {
 
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -593,7 +599,7 @@ func ClickMiddleMouseAt(x, y int32, t ...time.Duration) error {
 
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -742,7 +748,7 @@ func (w *Window) Press(key Key, t ...time.Duration) error {
 	}
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -802,7 +808,7 @@ func (w *Window) Type(text string, t ...time.Duration) error {
 
 	// HID Backend simulation
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	for _, r := range text {
@@ -860,7 +866,7 @@ func Press(k Key, t ...time.Duration) error {
 	}
 	//time.Sleep(30 * time.Millisecond)
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	time.Sleep(d)
@@ -906,7 +912,7 @@ func Type(text string, t ...time.Duration) error {
 	}
 
 	d := 30 * time.Millisecond
-	if len(t) > 0 && t[0] > 0 {
+	if len(t) > 0 && t[0] >= 0 {
 		d = t[0]
 	}
 	cb := getBackend()
@@ -1020,31 +1026,8 @@ func (w *Window) ClientToScreen(x, y int32) (sx, sy int32, err error) {
 	return window.ClientToScreen(w.HWND, x, y)
 }
 
-// ClientInfo 获取窗口坐标和宽高
-func (w *Window) ClientInfo() (x, y, width, height int32, err error) {
-	// 获取窗口左上角的屏幕坐标
-	x, y, err = w.ClientToScreen(0, 0)
-	if err != nil {
-		return
-	}
-
-	// 获取窗口客户区尺寸
-	width, height, err = w.ClientRect()
-	if err != nil {
-		return
-	}
-
-	return
-}
-
-// ClientCapture 截取窗口的图片
-func (w *Window) ClientCapture() (img *image.RGBA, err error) {
-	x, y, width, height, err := w.ClientInfo()
-
-	// 4. 截取该窗口区域
-	img, err = screen.CaptureRegion(x, y, width, height)
-	if err != nil {
-		return
-	}
-	return
+// parseHwnd 将 "0x..." 格式的十六进制字符串解析为 uintptr
+func parseHwnd(s string) uintptr {
+	v, _ := strconv.ParseUint(s, 0, 64)
+	return uintptr(v)
 }
