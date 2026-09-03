@@ -976,6 +976,7 @@ type keyboardInput struct {
 type input struct {
 	Type uint32
 	Ki   keyboardInput
+	_    [8]byte // union tail (MOUSEINPUT/HARDWAREINPUT) -> sizeof(INPUT)==40 on amd64
 }
 
 const (
