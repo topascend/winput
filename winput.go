@@ -11,6 +11,7 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/topascend/winput/clipboard"
 	"github.com/topascend/winput/hid"
 	"github.com/topascend/winput/keyboard"
 	"github.com/topascend/winput/mouse"
@@ -963,6 +964,19 @@ func Type(text string, t ...time.Duration) error {
 		time.Sleep(d)
 	}
 	return nil
+}
+
+// PasteByClipboard 通过剪贴板 + Ctrl+V 输入文本，替代 winput.Type 的逐字符模拟。
+// winput.Type 走 SendInput 前台击键，字符要经输入法/目标窗口合成，
+// 在微信这类自定义输入框里会错乱（实测 166539... 被打成 AA66539...）。
+// 剪贴板粘贴整段文本直达输入框，不受输入法影响，逐字精确。
+func PasteByClipboard(text string) error {
+	if err := clipboard.WriteAll(text); err != nil {
+		return err
+	}
+	time.Sleep(100 * time.Millisecond) // 等待剪贴板写入完成
+
+	return PressHotkey(KeyCtrl, KeyV)
 }
 
 // Internal structures for SendInput
