@@ -943,11 +943,16 @@ func Type(text string, t ...time.Duration) error {
 
 	// Message Backend Fallback: SendInput with Unicode
 	sendInputOnce.Do(func() {
-		// Self-test to check if SendInput is viable (permissions, etc.)
+		// Self-test that SendInput is usable WITHOUT emitting any visible input.
+		// A key-up for a key that is never pressed (VK_F24) types nothing, yet
+		// still returns 0 where SendInput is blocked (CI/headless sessions,
+		// session 0, UIPI restrictions). Do NOT inject a dummy character here:
+		// it lands in the focused app and corrupts the head of the text
+		// (typing "我是" used to arrive as "AA是", "1..." as "AA...").
 		var inputs [1]input
 		inputs[0].Type = INPUT_KEYBOARD
-		inputs[0].Ki.WScan = 'A' // Dummy char
-		inputs[0].Ki.DwFlags = KEYEVENTF_UNICODE
+		inputs[0].Ki.WVk = VK_F24
+		inputs[0].Ki.DwFlags = KEYEVENTF_KEYUP
 
 		n, _, _ := window.ProcSendInput.Call(1, uintptr(unsafe.Pointer(&inputs[0])), uintptr(unsafe.Sizeof(inputs[0])))
 		if n == 0 {
@@ -997,6 +1002,9 @@ const (
 	INPUT_KEYBOARD    = 1
 	KEYEVENTF_UNICODE = 0x0004
 	KEYEVENTF_KEYUP   = 0x0002
+
+	// VK_F24 is used by the SendInput self-test probe (key-up only).
+	VK_F24 = 0x87
 )
 
 func sendUnicode(r rune) {
