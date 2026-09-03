@@ -965,7 +965,7 @@ func Type(text string, t ...time.Duration) error {
 
 	for _, r := range text {
 		sendUnicode(r)
-		//time.Sleep(30 * time.Millisecond)
+		// time.Sleep(30 * time.Millisecond)
 		time.Sleep(d)
 	}
 	return nil
